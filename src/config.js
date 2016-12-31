@@ -2,10 +2,12 @@ require('babel-polyfill');
 
 const environment = {
   development: {
-    isProduction: false
+    isProduction: false,
+    apiUrl: 'http://localhost:5000'
   },
   production: {
-    isProduction: true
+    isProduction: true,
+    apiUrl: 'http://localhost:5000'
   }
 }[process.env.NODE_ENV || 'development'];
 

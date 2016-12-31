@@ -5,14 +5,13 @@ import * as authActions from 'redux/modules/auth';
 
 @connect(
   state => ({user: state.auth.user,
-    loginError: state.auth.loginError}),
+    registerError: state.auth.registerError}),
   authActions)
-export default class Login extends Component {
+export default class Register extends Component {
   static propTypes = {
     user: PropTypes.object,
-    loginError: PropTypes.string,
-    login: PropTypes.func,
-    logout: PropTypes.func
+    registerError: PropTypes.string,
+    registerUser: PropTypes.func,
   }
 
   handleSubmit = (event) => {
@@ -20,18 +19,18 @@ export default class Login extends Component {
     const username = this.refs.username;
     const password = this.refs.password;
     // TODO: Check for basic things here before making the login call
-    this.props.login(username.value, password.value);
+    this.props.registerUser(username.value, password.value);
     username.value = '';
     password.value = '';
   }
 
   render() {
-    const {user, logout, loginError} = this.props;
-    const styles = require('./Login.scss');
+    const {user, registerError} = this.props;
+    const styles = require('./Register.scss');
     return (
-      <div className={styles.loginPage + ' container'}>
-        <Helmet title="Login"/>
-        <h1>Login</h1>
+      <div className={styles.registerPage + ' container'}>
+        <Helmet title="Register"/>
+        <h1>Register</h1>
         {!user &&
         <div>
           <form className="login-form form-inline" onSubmit={this.handleSubmit}>
@@ -39,20 +38,16 @@ export default class Login extends Component {
               <input type="text" ref="username" placeholder="Enter a username" className="form-control"/>
               <input type="password" ref="password" placeholder="Enter password" className="form-control" />
             </div>
-            <button className="btn btn-success" onClick={this.handleSubmit}><i className="fa fa-sign-in"/>{' '}Log In
+            <button className="btn btn-success" onClick={this.handleSubmit}><i className="fa fa-sign-in"/>{' '}Register
             </button>
           </form>
-          {loginError &&
-            <h4>{loginError}</h4>}
+          {registerError &&
+            <h4>{registerError}</h4>}
         </div>
         }
         {user &&
         <div>
-          <p>You are currently logged in as {user.name}.</p>
-
-          <div>
-            <button className="btn btn-danger" onClick={logout}><i className="fa fa-sign-out"/>{' '}Log Out</button>
-          </div>
+          <p>You have already registered as {user.username}.</p>
         </div>
         }
       </div>

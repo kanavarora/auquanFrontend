@@ -11,6 +11,8 @@ import ApiClient from './helpers/ApiClient';
 import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
+import cookie from 'react-cookie';
+import cookieParser from 'cookie-parser';
 
 import { match } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -22,6 +24,7 @@ import getRoutes from './routes';
 const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
 const pretty = new PrettyError();
 const app = new Express();
+app.use(cookieParser());
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({
   target: targetUrl,
@@ -66,6 +69,17 @@ app.use((req, res) => {
     // hot module replacement is enabled in the development env
     webpackIsomorphicTools.refresh();
   }
+  global.cookieVal = req.headers['cookie'];
+  global.cookie = {
+    load(attrName) {
+      if (typeof global.cookieVal === 'undefined') {
+        return false;
+      }
+      const filterVal = global.cookieVal.split(";").filter(cookieAttr => cookieAttr.split("=")[0].trim() === attrName);
+      return typeof filterVal[0] !== 'undefined' && filterVal[1] !== null ? filterVal[0].split('=')[1] : false;
+    }
+  };
+
   const client = new ApiClient(req);
   const memoryHistory = createHistory(req.originalUrl);
   const store = createStore(memoryHistory, client);
@@ -99,6 +113,7 @@ app.use((req, res) => {
         res.status(200);
 
         global.navigator = {userAgent: req.headers['user-agent']};
+        cookie.plugToRequest(req, res);
 
         res.send('<!doctype html>\n' +
           ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>));

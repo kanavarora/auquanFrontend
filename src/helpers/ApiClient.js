@@ -1,5 +1,6 @@
 import superagent from 'superagent';
 import config from '../config';
+import cookie from 'react-cookie';
 
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
@@ -7,10 +8,10 @@ function formatUrl(path) {
   const adjustedPath = path[0] !== '/' ? '/' + path : path;
   if (__SERVER__) {
     // Prepend host and port of the API server to the path.
-    return 'http://' + config.apiHost + ':' + config.apiPort + adjustedPath;
+    return config.apiUrl + adjustedPath;
   }
   // Prepend `/api` to relative URL, to proxy to API server.
-  return '/api' + adjustedPath;
+  return config.apiUrl + adjustedPath;
 }
 
 export default class ApiClient {
@@ -25,6 +26,12 @@ export default class ApiClient {
 
         if (__SERVER__ && req.get('cookie')) {
           request.set('cookie', req.get('cookie'));
+        }
+
+        if (__CLIENT__) {
+          if (cookie.load('_uc_user_token')) {
+            request.header.Authorization = 'Bearer ' + cookie.load('_uc_user_token');
+          }
         }
 
         if (data) {
