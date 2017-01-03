@@ -1,17 +1,107 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
-import { CounterButton, GithubButton } from 'components';
+import React, { Component, PropTypes } from 'react';
 import config from '../../config';
 import Helmet from 'react-helmet';
+import Modal from 'react-modal';
+import { Signup } from 'components';
+import {connect} from 'react-redux';
 
+@connect(
+  state => ({user: state.auth.user}))
 export default class Home extends Component {
+
+  static propTypes = {
+    user: PropTypes.object
+  }
+
+  constructor() {
+    super();
+    this.state = {
+      modalIsOpen: false,
+    };
+  }
+
+  handleSubmit = () => {
+    this.setState({modalIsOpen: true});
+  };
+
+  handleViewTutorial = () => {
+
+  };
+
   render() {
+    const {user} = this.props;
     const styles = require('./Home.scss');
     // require the logo image both from client and server
-    const logoImage = require('./logo.png');
+    const logoImage = require('./auquan_highres_logo_full_small.png');
+
+    const customStyles = {
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+      }
+    };
+
+    const renderSignupModal = () => {
+      const shouldClose = true;
+      const isSignupModal = true;
+      const closeModal = () => {
+        this.setState({modalIsOpen: false});
+      };
+      return (
+      <Modal
+        isOpen={this.state.modalIsOpen}
+        contentLabel="Signup"
+        style={customStyles}
+        onRequestClose={this.closeModal}
+        shouldCloseOnOverlayClick={shouldClose}>
+        <Signup
+          isModal={isSignupModal}
+          closeModalPressed={closeModal}
+          utmSource={this.props.location.query.utm_source}
+        />
+      </Modal>
+      );
+    };
+
+    const renderHeading = function(title) {
+      return (<h2>{title}</h2>);
+    };
+
+    const renderPara = function(line) {
+      if (typeof line === 'function') {
+        return (<p>{line()}</p>);
+      }
+      return (<p><span>{line}</span></p>);
+    };
+
+    const renderBulletPoints = function(lines) {
+      return (<ul>
+                {lines.map((line) => {
+                  if (typeof line === 'function') {
+                    return (<li>{line()}</li>);
+                  }
+                  return (<li><span>{line}</span></li>);
+                })
+                }
+              </ul>);
+    };
+
+    const renderOrderedList = function(points) {
+      return (<ol>
+                {points.map((point) => {
+                  return (<li><b>{point[0]}</b> {point[1]}</li>);
+                })}
+              </ol>);
+    };
+
     return (
       <div className={styles.home}>
         <Helmet title="Home"/>
+        {renderSignupModal()}
         <div className={styles.masthead}>
           <div className="container">
             <div className={styles.logo}>
@@ -22,160 +112,63 @@ export default class Home extends Component {
             <h1>{config.app.title}</h1>
 
             <h2>{config.app.description}</h2>
-
-            <p>
-              <a className={styles.github} href="https://github.com/erikras/react-redux-universal-hot-example"
-                 target="_blank">
-                <i className="fa fa-github"/> View on Github
-              </a>
-            </p>
-            <GithubButton user="erikras"
-                          repo="react-redux-universal-hot-example"
-                          type="star"
-                          width={160}
-                          height={30}
-                          count large/>
-            <GithubButton user="erikras"
-                          repo="react-redux-universal-hot-example"
-                          type="fork"
-                          width={160}
-                          height={30}
-                          count large/>
-
+            {!user && <button onClick={this.handleSubmit} className={styles.signupButton}>Sign up</button>}
+            {user && <a href="http://www.auquan.com/trading-blog" target="_blank">View Tutorial</a>}
             <p className={styles.humility}>
-              Created and maintained by <a href="https://twitter.com/erikras" target="_blank">@erikras</a>.
+              Created and maintained by Auquan.
             </p>
           </div>
         </div>
 
         <div className="container">
-          <div className={styles.counterContainer}>
-            <CounterButton multireducerKey="counter1"/>
-            <CounterButton multireducerKey="counter2"/>
-            <CounterButton multireducerKey="counter3"/>
+          <div className={styles.section}>
+            {renderHeading('What to do?')}
+            {renderPara('Write a trading algorithm using any logic you like. Backtest and submit any number of your trading strategies.')}
+            {renderPara('We will run your code against test/live data to evaluate your performance')}
           </div>
-
-          <p>This starter boilerplate app uses the following technologies:</p>
-
-          <ul>
-            <li>
-              <del>Isomorphic</del>
-              {' '}
-              <a href="https://medium.com/@mjackson/universal-javascript-4761051b7ae9">Universal</a> rendering
-            </li>
-            <li>Both client and server make calls to load data from separate API server</li>
-            <li><a href="https://github.com/facebook/react" target="_blank">React</a></li>
-            <li><a href="https://github.com/rackt/react-router" target="_blank">React Router</a></li>
-            <li><a href="http://expressjs.com" target="_blank">Express</a></li>
-            <li><a href="http://babeljs.io" target="_blank">Babel</a> for ES6 and ES7 magic</li>
-            <li><a href="http://webpack.github.io" target="_blank">Webpack</a> for bundling</li>
-            <li><a href="http://webpack.github.io/docs/webpack-dev-middleware.html" target="_blank">Webpack Dev Middleware</a>
-            </li>
-            <li><a href="https://github.com/glenjamin/webpack-hot-middleware" target="_blank">Webpack Hot Middleware</a></li>
-            <li><a href="https://github.com/rackt/redux" target="_blank">Redux</a>'s futuristic <a
-              href="https://facebook.github.io/react/blog/2014/05/06/flux.html" target="_blank">Flux</a> implementation
-            </li>
-            <li><a href="https://github.com/gaearon/redux-devtools" target="_blank">Redux Dev Tools</a> for next
-              generation DX (developer experience).
-              Watch <a href="https://www.youtube.com/watch?v=xsSnOQynTHs" target="_blank">Dan Abramov's talk</a>.
-            </li>
-            <li><a href="https://github.com/rackt/redux-router" target="_blank">Redux Router</a> Keep
-              your router state in your Redux store
-            </li>
-            <li><a href="http://eslint.org" target="_blank">ESLint</a> to maintain a consistent code style</li>
-            <li><a href="https://github.com/erikras/redux-form" target="_blank">redux-form</a> to manage form state
-              in Redux
-            </li>
-            <li><a href="https://github.com/sslotsky/violet-paginator" target="_blank">violet-paginator</a> to manage list state
-              in Redux, including pagination, sorting, filtering, updating, and more.
-            </li>
-            <li><a href="https://github.com/erikras/multireducer" target="_blank">multireducer</a> combine several
-              identical reducer states into one key-based reducer</li>
-            <li><a href="https://github.com/webpack/style-loader" target="_blank">style-loader</a> and <a
-              href="https://github.com/jtangelder/sass-loader" target="_blank">sass-loader</a> to allow import of
-              stylesheets
-            </li>
-            <li><a href="https://github.com/shakacode/bootstrap-sass-loader" target="_blank">bootstrap-sass-loader</a> and <a
-              href="https://github.com/gowravshekar/font-awesome-webpack" target="_blank">font-awesome-webpack</a> to customize Bootstrap and FontAwesome
-            </li>
-            <li><a href="http://socket.io/">socket.io</a> for real-time communication</li>
-          </ul>
-
-          <h3>Features demonstrated in this project</h3>
-
-          <dl>
-            <dt>Multiple components subscribing to same redux store slice</dt>
-            <dd>
-              The <code>App.js</code> that wraps all the pages contains an <code>InfoBar</code> component
-              that fetches data from the server initially, but allows for the user to refresh the data from
-              the client. <code>About.js</code> contains a <code>MiniInfoBar</code> that displays the same
-              data.
-            </dd>
-            <dt>Server-side data loading</dt>
-            <dd>
-              The <Link to="/widgets">Widgets page</Link> demonstrates how to fetch data asynchronously from
-              some source that is needed to complete the server-side rendering. <code>Widgets.js</code>'s
-              <code>asyncConnect()</code> function is called before the widgets page is loaded, on either the server
-              or the client, allowing all the widget data to be loaded and ready for the page to render.
-            </dd>
-            <dt>Data loading errors</dt>
-            <dd>
-              The <Link to="/widgets">Widgets page</Link> also demonstrates how to deal with data loading
-              errors in Redux. The API endpoint that delivers the widget data intentionally fails 33% of
-              the time to highlight this. The <code>clientMiddleware</code> sends an error action which
-              the <code>widgets</code> reducer picks up and saves to the Redux state for presenting to the user.
-            </dd>
-            <dt>Session based login</dt>
-            <dd>
-              On the <Link to="/login">Login page</Link> you can submit a username which will be sent to the server
-              and stored in the session. Subsequent refreshes will show that you are still logged in.
-            </dd>
-            <dt>Redirect after state change</dt>
-            <dd>
-              After you log in, you will be redirected to a Login Success page. This <strike>magic</strike> logic
-              is performed in <code>componentWillReceiveProps()</code> in <code>App.js</code>, but it could
-              be done in any component that listens to the appropriate store slice, via Redux's <code>@connect</code>,
-              and pulls the router from the context.
-            </dd>
-            <dt>Auth-required views</dt>
-            <dd>
-              The aforementioned Login Success page is only visible to you if you are logged in. If you try
-              to <Link to="/loginSuccess">go there</Link> when you are not logged in, you will be forwarded back
-              to this home page. This <strike>magic</strike> logic is performed by the
-              <code>onEnter</code> hook within <code>routes.js</code>.
-            </dd>
-            <dt>Forms</dt>
-            <dd>
-              The <Link to="/survey">Survey page</Link> uses the
-              still-experimental <a href="https://github.com/erikras/redux-form" target="_blank">redux-form</a> to
-              manage form state inside the Redux store. This includes immediate client-side validation.
-            </dd>
-            <dt>Pagination</dt>
-            <dd>
-              The <Link to="/pagination">Pagination page</Link> uses
-              <a href="https://www.npmjs.com/package/violet-paginator" target="_blank">violet-paginator</a> to
-              paginate and sort records in a data table.
-            </dd>
-            <dt>WebSockets / socket.io</dt>
-            <dd>
-              The <Link to="/chat">Chat</Link> uses the socket.io technology for real-time
-              communication between clients. You need to <Link to="/login">login</Link> first.
-            </dd>
-          </dl>
-
-          <h3>From the author</h3>
-
-          <p>
-            I cobbled this together from a wide variety of similar "starter" repositories. As I post this in June 2015,
-            all of these libraries are right at the bleeding edge of web development. They may fall out of fashion as
-            quickly as they have come into it, but I personally believe that this stack is the future of web development
-            and will survive for several years. I'm building my new projects like this, and I recommend that you do,
-            too.
-          </p>
-
-          <p>Thanks for taking the time to check this out.</p>
-
-          <p>– Erik Rasmussen</p>
+          <div className={styles.section}>
+            {renderHeading('What can I win?')}
+            {renderBulletPoints([()=>{
+              return (<span>Cash prizes for the strategies that top the leaderboard. <b>We will update the actual prize money shortly!
+</b></span>);
+            },
+            'Showcase your talent to top quantitative firms',
+            'Interview with top quantitative firms based on your performance in the competition'
+            ])}
+          </div>
+          <div className={styles.section}>
+            {renderHeading('How will I win?')}
+            {renderPara('Broadly, we are looking for stable returns with low risk and low correlation with the benchmark index. We will rate you on the following criteria:')}
+            {renderOrderedList([['Alpha:', 'Measure of how your algorithm performs against the benchmark. Higher the alpha, the better a strategy is.'],
+                                ['Beta:', 'Correlation of your algorithm’s performance with the benchmark. Lower the beta (the strategy is immune to swings in the market), the better a strategy is.'],
+                                ['Sharpe Ratio:', 'Returns/Risk, measure of risk adjusted returns. Higher Sharpe is better.'],
+                                ['Annualized volatility:', 'Lower volatility is better.'],
+                                ['Max Drawdown:', 'The greatest loss suffered from a peak in returns to its subsequent low. Lower values are better.']])}
+            {renderPara(()=>{return (<span>If you want a detailed explanation of what these parameters are, follow our <a href="aquan.com/tutorial">tutorial series</a>!</span>);})}
+            {renderPara('The exact judging metric will be updated shortly, stay tuned!')}
+            {renderPara('The leaderboard is updated when you make a submission. If you submit several trading algorithms, we will take the one with the highest score. We will announce the winners at the end of the competition.')}
+          </div>
+          <div className={styles.section}>
+            {renderHeading('Where is the toolbox?')}
+            {renderPara('The details of the toolbox, how to use and sample code snippets will be available shortly.')}
+          </div>
+          <div className={styles.section}>
+            {renderHeading('What can I trade?')}
+            {renderPara('We will make a list of datasets available shortly. Your algorithm must trade any of the products which are available in the dataset ONLY.')}
+          </div>
+          <div className={styles.section}>
+            {renderHeading('How far back does the data go?')}
+            {renderPara('We will make the range of datasets available shortly.')}
+          </div>
+          <div className={styles.section}>
+            {renderHeading('Anything else?')}
+            {renderPara('A few other considerations:')}
+            {renderBulletPoints(['Your algorithm must evaluate in less than 10 minutes',
+                                 'Your algorithm must return the same result if it is run twice (deterministic)',
+                                 'Your algorithm should not use ex post common knowledge (e.g. ‘don’t trade in 2008’)',
+                                 'Your algorithm must complete a full backtest for the entire range of data available',
+                                 'Your algorithm must not violate or infringe on any applicable law or regulation or third-party rights. Any violation would mean immediate disqualification.'])}
+          </div>
         </div>
       </div>
     );

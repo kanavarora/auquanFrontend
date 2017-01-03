@@ -12,3 +12,5 @@ export MiniInfoBar from './MiniInfoBar/MiniInfoBar';
 export SurveyForm from './SurveyForm/SurveyForm';
 export WidgetForm from './WidgetForm/WidgetForm';
 export Problem from './Problem/Problem';
+export Signup from './Signup/Signup';
+export CreateSubmission from './CreateSubmission/CreateSubmission';

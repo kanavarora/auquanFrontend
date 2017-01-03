@@ -15,30 +15,41 @@ const LOGOUT = 'redux-example/auth/LOGOUT';
 const LOGOUT_SUCCESS = 'redux-example/auth/LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'redux-example/auth/LOGOUT_FAIL';
 
+const COOKIE_USERNAME = '_uc_user_username';
+const COOKIE_FIRSTNAME = '_uc_user_firstname';
+const COOKIE_LASTNAME = '_uc_user_lastname';
+const COOKIE_TOKEN = '_uc_user_token';
+
 function saveUserToCookie(user, token) {
   const expires = new Date(+new Date + 31536000000);
-  cookie.save('_uc_user_username', user.username, {path: '/', expires: expires});
-  cookie.save('_uc_user_token', token, {path: '/', expires: expires});
+  cookie.save(COOKIE_USERNAME, user.username, {path: '/', expires: expires});
+  cookie.save(COOKIE_FIRSTNAME, user.firstName, {path: '/', expires: expires});
+  cookie.save(COOKIE_LASTNAME, user.lastName, {path: '/', expires: expires});
+  cookie.save(COOKIE_TOKEN, token, {path: '/', expires: expires});
   return true;
 }
 
 function removeUserFromCookie() {
-  cookie.remove('_uc_user_username', {path: '/'});
-  cookie.remove('_uc_user_token', {path: '/'});
+  cookie.remove(COOKIE_USERNAME, {path: '/'});
+  cookie.remove(COOKIE_FIRSTNAME, {path: '/'});
+  cookie.remove(COOKIE_LASTNAME, {path: '/'});
+  cookie.remove(COOKIE_TOKEN, {path: '/'});
   return true;
 }
 
 function getUserFromCookie() {
-  return cookie.load('_uc_user_token') ? {
-    username: cookie.load('_uc_user_username'),
-    token: cookie.load('_uc_user_token')
+  return cookie.load(COOKIE_TOKEN) ? {
+    username: cookie.load(COOKIE_USERNAME),
+    firstName: cookie.load(COOKIE_FIRSTNAME),
+    lastName: cookie.load(COOKIE_LASTNAME),
+    token: cookie.load(COOKIE_TOKEN)
   } : null;
 }
 
 const initialState = {
   loaded: false,
   user: getUserFromCookie(),
-  token: cookie.load('_uc_user_token') || null,
+  token: cookie.load(COOKIE_TOKEN) || null,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -147,14 +158,11 @@ export function login(username, password) {
   };
 }
 
-export function registerUser(username, password) {
+export function registerUser(userDetails) {
   return {
     types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAIL],
     promise: (client) => client.post('/api/createUser', {
-      data: {
-        username: username,
-        password: password
-      }
+      data: userDetails
     })
   };
 }
