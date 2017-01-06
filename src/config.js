@@ -17,18 +17,18 @@ module.exports = Object.assign({
   apiHost: process.env.APIHOST || 'localhost',
   apiPort: process.env.APIPORT,
   app: {
-    title: 'Auquan competition',
+    title: 'QuantQuest',
     description: 'A competition to find the best trader',
     head: {
-      titleTemplate: 'Auquan competition: %s',
+      titleTemplate: 'QuantQuest: %s',
       meta: [
-        {name: 'description', content: 'A competition to find the best trader.'},
+        {name: 'description', content: 'A quest to find the best quant'},
         {charset: 'utf-8'},
-        {property: 'og:site_name', content: 'Auquan competition'},
-        {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.jpg'},
+        {property: 'og:site_name', content: 'Quant Quest'},
+        {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.png'},
         {property: 'og:locale', content: 'en_US'},
         {property: 'og:title', content: 'Auquan competition'},
-        {property: 'og:description', content: 'A competition to find the best trader.'},
+        {property: 'og:description', content: 'A quest to find the best quant'},
         {property: 'og:card', content: 'summary'},
         {property: 'og:image:width', content: '200'},
         {property: 'og:image:height', content: '200'}

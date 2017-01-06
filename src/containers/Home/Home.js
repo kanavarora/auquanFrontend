@@ -33,6 +33,7 @@ export default class Home extends Component {
     const styles = require('./Home.scss');
     // require the logo image both from client and server
     const logoImage = require('./auquan_highres_logo_full_small.png');
+    const optiverImage = require('./optiverLogo.png');
 
     const customStyles = {
       content: {
@@ -110,13 +111,28 @@ export default class Home extends Component {
               </p>
             </div>
             <h1>{config.app.title}</h1>
+            <div>
+              <p>with</p>
+            </div>
+            <div className={styles.partnerContainer}>
+              <p>
+                <img src={optiverImage}/>
+              </p>
+            </div>
+            <div className={styles.timeContainer}>
+              <p>
+                30 January-5 February 2017
+              </p>
+            </div>
 
-            <h2>{config.app.description}</h2>
+            <div className={styles.description}>
+              <h3>ACE CODER, MATH GENIUS OR BIG ON DATA</h3>
+              <h4>Test your Trading Skills and Get Recruited</h4>
+            </div>
+
             {!user && <button onClick={this.handleSubmit} className={styles.signupButton}>Sign up</button>}
             {user && <a href="http://www.auquan.com/trading-blog" target="_blank">View Tutorial</a>}
-            <p className={styles.humility}>
-              Created and maintained by Auquan.
-            </p>
+
           </div>
         </div>
 

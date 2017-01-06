@@ -97,7 +97,7 @@ export default class Signup extends Component {
                 <input type="text" ref="lastName" placeholder="Enter your last name" onChange={this.onEditInput} className="form-control"/>
               </span></p>
               <p><span>
-                <input type="text" ref="username" placeholder="Enter email(Also your logic)" onChange={this.onEditInput} className="form-control"/>
+                <input type="text" ref="username" placeholder="Enter email (Also your login)" onChange={this.onEditInput} className="form-control"/>
               </span></p>
               <p><span>
                 <input type="password" ref="password" placeholder="Enter password" onChange={this.onEditInput} className="form-control" />

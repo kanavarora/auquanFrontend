@@ -97,6 +97,30 @@
       margin: auto;
     }
   }
+  
+  .partnerContainer {
+    $size: 200px;
+    margin: auto;
+    height: $size;
+    width: $size;
+    vertical-align: middle;
+    p {
+      line-height: $size;
+      margin: 0px;
+    }
+    img {
+      width: 75%;
+      margin: auto;
+    }
+  }
+  
+  .timeContainer {
+
+  }
+  
+  .description {
+
+  }
   h1 {
     color: $cyan;
     font-size: 4em;
