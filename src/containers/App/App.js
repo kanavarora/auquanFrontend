@@ -73,9 +73,9 @@ export default class App extends Component {
 
           <Navbar.Collapse eventKey={0}>
             <Nav navbar>
-              {user && <LinkContainer to="/problems">
+              { /* user && <LinkContainer to="/problems">
                 <NavItem eventKey={1}>Problems</NavItem>
-              </LinkContainer>}
+              </LinkContainer> */ }
 
               {!user &&
               <LinkContainer to="/login">
